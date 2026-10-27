@@ -20,9 +20,10 @@ const details: Record<string, { icon: string; copy: string }> = {
   Marketing: { icon: "◌", copy: "Research, plan, and create content for the people you serve." },
   "Data & analytics": { icon: "▥", copy: "Ask better questions of your data and find useful patterns." },
   "Customer support": { icon: "♡", copy: "Help customers find answers and give support teams a hand." },
+  Sales: { icon: "↗", copy: "Find prospects, improve outreach, and understand customer conversations." },
 };
 
 export default function CategoriesPage() {
   const list = categories.slice(1);
-  return <section className="page-wrap"><div className="page-heading"><div className="eyebrow"><span className="eyebrow-dot" />A PLACE FOR EVERY IDEA</div><h1>Explore by category.</h1><p>Whatever you’re working on, there’s a tool that can help.</p></div><div className="categories-grid">{list.map((category) => { const detail = details[category]; const count = tools.filter((tool) => tool.category === category).length; return <Link href={`/tools?category=${encodeURIComponent(category)}`} id={category.toLowerCase().replaceAll(" ", "-")} key={category} className="category-card"><span className="category-emoji">{detail.icon}</span><span className="category-count">{count} {count === 1 ? "tool" : "tools"}</span><h2>{category}</h2><p>{detail.copy}</p><ArrowUpRight className="category-card-arrow" size={16} /></Link>; })}</div></section>;
+  return <section className="page-wrap"><div className="page-heading"><div className="eyebrow"><span className="eyebrow-dot" />A PLACE FOR EVERY IDEA</div><h1>Explore by category.</h1><p>Whatever you’re working on, there’s a tool that can help.</p></div><div className="categories-grid">{list.map((category) => { const detail = details[category]; const count = tools.filter((tool) => tool.category === category).length; return <Link href={"/tools?category=" + encodeURIComponent(category)} id={category.toLowerCase().replaceAll(" ", "-")} key={category} className="category-card"><span className="category-emoji">{detail.icon}</span><span className="category-count">{count} {count === 1 ? "tool" : "tools"}</span><h2>{category}</h2><p>{detail.copy}</p><ArrowUpRight className="category-card-arrow" size={16} /></Link>; })}</div></section>;
 }
