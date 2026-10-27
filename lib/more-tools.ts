@@ -72,7 +72,7 @@ const entries: [string, string, string, string, string, string[]][] = [
   ["lalal-ai", "LALAL.AI", "Audio", "Separate vocals and instruments from audio and video files.", "lalal.ai", ["Audio", "Music", "Editing"]],
   ["mubert", "Mubert", "Audio", "Generate soundtracks and royalty-free music for digital content.", "mubert.com", ["Music", "Audio", "Creator"]],
   // Coding and app building
-  ["windsurf", "Windsurf", "Coding", "An AI-powered coding editor for building and understanding software.", "windsurf.com", ["Code", "Developer", "Editor"]],
+  ["windsurf", "Codeium (Windsurf)", "Coding", "An AI-powered coding editor for building and understanding software.", "windsurf.com", ["Code", "Developer", "Editor"]],
   ["replit", "Replit", "Coding", "Build, run, and share apps in a browser with AI coding help.", "replit.com", ["Code", "Apps", "Developer"]],
   ["lovable", "Lovable", "Coding", "Turn written ideas into working web app prototypes.", "lovable.dev", ["Apps", "No-code", "Developer"]],
   ["bolt", "Bolt.new", "Coding", "Prototype and run full-stack web apps from a browser prompt.", "bolt.new", ["Apps", "Developer", "No-code"]],
@@ -152,11 +152,42 @@ const entries: [string, string, string, string, string, string[]][] = [
   ["gorgias-ai", "Gorgias", "Customer support", "Help ecommerce support teams respond to customer messages.", "gorgias.com", ["Support", "Ecommerce", "Customer service"]],
 ];
 
+const extraEntries: [string, string, string, string, string, string[]][] = [
+  ["semantic-scholar", "Semantic Scholar", "Research", "Search scientific papers and explore AI-powered research highlights.", "semanticscholar.org", ["Research", "Academic", "Papers"]],
+  ["chatpdf", "ChatPDF", "Research", "Ask questions about a PDF and find answers grounded in its contents.", "chatpdf.com", ["Research", "PDF", "Documents"]],
+  ["explainpaper", "Explainpaper", "Research", "Get plain-language explanations of difficult academic papers.", "explainpaper.com", ["Research", "Academic", "Reading"]],
+  ["kore-searchassist", "Kore.ai SearchAssist", "Research", "Enterprise search and conversational knowledge retrieval for business information.", "kore.ai/searchassist/solutions-support-services", ["Search", "Enterprise", "Knowledge"]],
+  ["stable-diffusion", "Stable Diffusion (Stability AI)", "Image generation", "Explore Stability AI’s Stable Diffusion models and image-generation resources.", "stability.ai/stable-image", ["Images", "Open source", "Generation"]],
+  ["flux", "FLUX (Black Forest Labs)", "Image generation", "Explore Black Forest Labs’ FLUX image-generation models.", "bfl.ai/models", ["Images", "Generation", "Models"]],
+  ["dall-e-3", "DALL·E 3 (OpenAI)", "Image generation", "Learn about OpenAI’s DALL·E 3 image model and current image-generation options.", "openai.com/index/dall-e-3", ["Images", "OpenAI", "Generation"]],
+  ["wordvice-ai", "Wordvice AI", "Writing", "Proofread and refine academic English, essays, and manuscripts.", "wordvice.ai", ["Writing", "Academic", "Editing"]],
+  ["hemingway-editor", "Hemingway Editor Plus", "Writing", "Improve readability and make sentences clearer with Hemingway Editor.", "hemingwayapp.com/hemingway-editor-plus", ["Writing", "Editing", "Readability"]],
+  ["capcut-ai", "CapCut AI", "Video", "Edit videos with AI-assisted captions, background tools, and creative effects.", "capcut.com", ["Video", "Editing", "Captions"]],
+  ["speechify", "Speechify", "Audio", "Listen to text, documents, and web pages with text-to-speech voices.", "speechify.com", ["Audio", "Text to speech", "Reading"]],
+  ["claude-code", "Claude Code", "Coding", "Use Anthropic’s coding agent from your terminal, IDE, or development workflow.", "claude.com/product/claude-code", ["Code", "Developer", "Agent"]],
+  ["aider", "Aider", "Coding", "Pair program with AI models directly in a local Git repository.", "aider.chat", ["Code", "Developer", "Open source"]],
+  ["bito-ai", "Bito AI", "Coding", "Explore Bito’s AI tools for code understanding and developer workflows.", "bito.ai", ["Code", "Developer", "Review"]],
+  ["zapier-central", "Zapier Central", "Automation", "Read about Zapier Central and Zapier’s current AI automation tools.", "zapier.com/blog/introducing-zapier-central-ai-bots", ["Automation", "AI", "Integrations"]],
+  ["mem-ai", "Mem.ai", "Productivity", "Organize notes and knowledge with an AI-powered personal workspace.", "mem.ai", ["Productivity", "Notes", "Knowledge"]],
+  ["rows-ai", "Rows AI", "Data & analytics", "Analyze and transform spreadsheet data with an AI data analyst.", "rows.com/ai", ["Data", "Spreadsheets", "Analytics"]],
+  ["equals", "Equals", "Data & analytics", "Work with an AI-ready spreadsheet connected to business data.", "equals.com", ["Data", "Spreadsheets", "Analytics"]],
+  ["popai", "PopAI", "Presentations", "Create presentations and work with documents in an AI workspace.", "popai.pro/home", ["Presentations", "Documents", "AI assistant"]],
+  ["decksy-ai", "Decksy AI", "Presentations", "Generate and design presentation decks with an AI presentation maker.", "decksyai.com", ["Presentations", "Business", "Slides"]],
+  ["decktopus", "Decktopus", "Presentations", "Build presentations with guided layouts and presentation tools.", "decktopus.com", ["Presentations", "Business", "Slides"]],
+  ["ada", "Ada", "Customer support", "Automate customer service conversations across digital channels.", "ada.cx", ["Support", "Customer service", "Automation"]],
+  ["gong", "Gong.io", "Sales", "Analyze sales conversations and surface deal and revenue insights.", "gong.io", ["Sales", "Revenue", "Analytics"]],
+  ["apollo", "Apollo.ai", "Sales", "Find business leads and manage AI-assisted sales outreach.", "apollo.io", ["Sales", "Leads", "Outreach"]],
+  ["lavender", "Lavender", "Sales", "Improve sales emails with writing guidance and email coaching.", "lavender.ai", ["Sales", "Email", "Writing"]],
+  ["clay", "Clay", "Sales", "Research and enrich business leads with connected data workflows.", "clay.com", ["Sales", "Data", "Automation"]],
+  ["regie-ai", "Regie.ai", "Sales", "Create and manage AI-assisted sales prospecting and outreach.", "regie.ai", ["Sales", "Outreach", "Writing"]],
+  ["forethought", "Forethought", "Customer support", "Automate customer support workflows with generative AI.", "forethought.ai", ["Support", "Customer service", "Automation"]],
+  ["chatfuel-ai", "Chatfuel AI", "Customer support", "Build customer messaging automations for WhatsApp, Instagram, and Facebook.", "chatfuel.com", ["Support", "Messaging", "Chatbot"]],
+];
 const categoryColors: Record<string, string> = {
   "AI assistants": "mint", Writing: "blue", "Image generation": "pink", Video: "violet", Audio: "orange", Coding: "cream", Design: "blue", Presentations: "violet", Research: "mint", Education: "orange", Productivity: "cream", Automation: "mint", "Meeting assistants": "blue", Transcription: "orange", Marketing: "pink", "Data & analytics": "violet", "Customer support": "cream",
 };
 
-export const moreTools: Tool[] = entries.map(([slug, name, category, description, website, tags]) => ({
+export const moreTools: Tool[] = [...entries, ...extraEntries].map(([slug, name, category, description, website, tags]) => ({
   slug,
   name,
   category,
