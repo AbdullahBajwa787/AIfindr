@@ -10,6 +10,7 @@ export type Tool = {
   color: string;
   featured?: boolean;
   website: string;
+  affiliateUrl?: string;
   tags: string[];
 };
 
@@ -18,7 +19,7 @@ const originalTools: Tool[] = [
   { slug: "midjourney", name: "Midjourney", category: "Image generation", description: "Turn the image in your imagination into a beautiful visual.", price: "Paid", icon: "◉", color: "pink", featured: true, website: "https://midjourney.com", tags: ["Art", "Design", "Images"] },
   { slug: "perplexity", name: "Perplexity", category: "Research", description: "A smarter way to find answers, with sources you can follow.", price: "Freemium", icon: "◈", color: "blue", featured: true, website: "https://perplexity.ai", tags: ["Search", "Research", "Answers"] },
   { slug: "notion-ai", name: "Notion AI", category: "Productivity", description: "A helpful teammate tucked right inside your workspace.", price: "Freemium", icon: "N", color: "cream", website: "https://notion.so/product/ai", tags: ["Notes", "Writing", "Work"] },
-  { slug: "elevenlabs", name: "ElevenLabs", category: "Audio", description: "Create natural-sounding voices, narration, and audio experiences.", price: "Freemium", icon: "≋", color: "orange", website: "https://elevenlabs.io", tags: ["Voice", "Audio", "Text to speech"] },
+  { slug: "elevenlabs", name: "ElevenLabs", category: "Audio", description: "Create natural-sounding voices, narration, and audio experiences.", price: "Freemium", icon: "≋", color: "orange", website: "https://elevenlabs.io", affiliateUrl: "https://try.elevenlabs.io/3qhz9mp7sc14", tags: ["Voice", "Audio", "Text to speech"] },
   { slug: "cursor", name: "Cursor", category: "Coding", description: "A code editor designed to make building with AI feel natural.", price: "Freemium", icon: "⌘", color: "cream", website: "https://cursor.com", tags: ["Code", "Developer", "Editor"] },
   { slug: "runway", name: "Runway", category: "Video", description: "Bring your stories to life with a new generation of creative tools.", price: "Freemium", icon: "▰", color: "violet", website: "https://runwayml.com", tags: ["Video", "Creative", "Generative"] },
   { slug: "canva-magic", name: "Canva Magic Studio", category: "Design", description: "Make polished designs and get past the blank canvas, faster.", price: "Freemium", icon: "C", color: "blue", website: "https://canva.com/magic", tags: ["Design", "Presentations", "Images"] },

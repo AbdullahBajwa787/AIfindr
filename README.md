@@ -34,3 +34,5 @@ The local preview runs at **http://localhost:3000** while the development server
 - The Suggest a tool form is a visual demo. It does not send or save submissions.
 
 This version has no database, sign-in, or payments. The tool count and directory entries are starter content; replace them with real entries before launch.
+
+- The ElevenLabs listing uses the referral link supplied by the site owner and shows an affiliate disclosure on its detail page. Referral reporting and commission payouts are handled by ElevenLabs through PartnerStack, not Polar.
