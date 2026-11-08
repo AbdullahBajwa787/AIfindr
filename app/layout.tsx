@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { SiteShell } from "@/components/site-shell";
+import { Analytics } from "@vercel/analytics/next";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -16,7 +17,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body><SiteShell>{children}</SiteShell></body>
+      <body>
+        <SiteShell>{children}</SiteShell>
+        <Analytics />
+      </body>
     </html>
   );
 }
