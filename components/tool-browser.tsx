@@ -2,7 +2,8 @@
 
 import { useMemo, useState, useEffect } from "react";
 import { Search, SlidersHorizontal, X, Bookmark, Sparkles, ArrowUpDown, Filter } from "lucide-react";
-import { categories, tools } from "@/lib/tools";
+import { categories } from "@/lib/tools";
+import { useTools } from "@/lib/tools-store";
 import { ToolCard } from "@/components/tool-card";
 
 export function ToolBrowser({
@@ -12,6 +13,7 @@ export function ToolBrowser({
   initialCategory?: string;
   initialQuery?: string;
 }) {
+  const { tools: allTools } = useTools();
   const [query, setQuery] = useState(initialQuery);
   const [category, setCategory] = useState(initialCategory);
   const [price, setPrice] = useState("Any price");
@@ -35,7 +37,7 @@ export function ToolBrowser({
   }, []);
 
   const filtered = useMemo(() => {
-    let result = tools.filter((tool) => {
+    let result = allTools.filter((tool) => {
       const q = query.toLowerCase().trim();
       const matchesQuery =
         !q ||

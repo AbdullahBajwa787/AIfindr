@@ -12,6 +12,7 @@ export type Tool = {
   website: string;
   affiliateUrl?: string;
   tags: string[];
+  logoUrl?: string;
 };
 
 const originalTools: Tool[] = [
