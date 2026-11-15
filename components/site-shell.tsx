@@ -11,7 +11,6 @@ const links = [
   { href: "/categories", label: "Categories", icon: Layers },
   { href: "/about", label: "About", icon: Info },
   { href: "/support", label: "Support", icon: LifeBuoy },
-  { href: "/admin", label: "Admin CMS", icon: ShieldCheck },
 ];
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
@@ -153,7 +152,6 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                 <li><Link href="/about" className="hover:text-white transition-colors">Our Philosophy</Link></li>
                 <li><Link href="/submit" className="hover:text-white transition-colors">Submit Your AI App</Link></li>
                 <li><Link href="/support" className="hover:text-white transition-colors">Content & Creator Support</Link></li>
-                <li><Link href="/admin" className="text-[#a3ff12] hover:underline font-bold transition-colors">Admin CMS Console ⚡</Link></li>
               </ul>
             </div>
 
