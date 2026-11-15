@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Sparkles, Layers } from "lucide-react";
 import { tools, categories } from "@/lib/tools";
 
 const details: Record<string, { icon: string; copy: string }> = {
@@ -23,7 +23,67 @@ const details: Record<string, { icon: string; copy: string }> = {
   Sales: { icon: "↗", copy: "Find prospects, improve outreach, and understand customer conversations." },
 };
 
+export const metadata = { title: "Explore AI Categories — AIFindr" };
+
 export default function CategoriesPage() {
   const list = categories.slice(1);
-  return <section className="page-wrap"><div className="page-heading"><div className="eyebrow"><span className="eyebrow-dot" />A PLACE FOR EVERY IDEA</div><h1>Explore by category.</h1><p>Whatever you’re working on, there’s a tool that can help.</p></div><div className="categories-grid">{list.map((category) => { const detail = details[category]; const count = tools.filter((tool) => tool.category === category).length; return <Link href={"/tools?category=" + encodeURIComponent(category)} id={category.toLowerCase().replaceAll(" ", "-")} key={category} className="category-card"><span className="category-emoji">{detail.icon}</span><span className="category-count">{count} {count === 1 ? "tool" : "tools"}</span><h2>{category}</h2><p>{detail.copy}</p><ArrowUpRight className="category-card-arrow" size={16} /></Link>; })}</div></section>;
+
+  return (
+    <section className="mx-auto max-w-[1200px] px-5 md:px-8 py-16">
+      {/* Page Heading */}
+      <div className="mb-12 text-center sm:text-left">
+        <div className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-widest text-[#a3ff12] mb-2.5 font-bold">
+          <Layers size={13} className="text-[#a3ff12]" />
+          <span>A UNIVERSE FOR EVERY WORKFLOW</span>
+        </div>
+        <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+          Explore by Category
+        </h1>
+        <p className="mt-3 text-sm sm:text-base text-[#9eb19a] max-w-xl">
+          Whatever you are creating, building, or automating, discover specialized tools built specifically for your domain.
+        </p>
+      </div>
+
+      {/* Grid of Categories */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {list.map((category) => {
+          const detail = details[category] || { icon: "✳", copy: "Tools to streamline your creative process." };
+          const count = tools.filter((tool) => tool.category === category).length;
+          const anchorId = category.toLowerCase().replaceAll(" ", "-");
+
+          return (
+            <Link
+              key={category}
+              id={anchorId}
+              href={`/tools?category=${encodeURIComponent(category)}`}
+              className="glossy-card group relative flex flex-col justify-between p-6 sm:p-7"
+            >
+              <div className="relative z-10">
+                <div className="flex items-center justify-between">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#a3ff12]/30 bg-gradient-to-b from-[#a3ff12]/20 to-[#0e160a] text-2xl text-[#a3ff12] group-hover:border-[#a3ff12] group-hover:scale-110 shadow-[0_0_15px_rgba(163,255,18,0.2)] transition-all">
+                    {detail.icon}
+                  </span>
+                  <span className="rounded-full border border-[#22331b] bg-[#0c130a] px-3.5 py-1 font-mono text-[11px] font-bold text-[#8ea087] group-hover:text-[#a3ff12] group-hover:border-[#a3ff12]/50 shadow-sm transition-colors">
+                    {count} {count === 1 ? "tool" : "tools"}
+                  </span>
+                </div>
+
+                <h2 className="mt-6 text-xl font-black text-white group-hover:text-[#a3ff12] transition-colors">
+                  {category}
+                </h2>
+                <p className="mt-2 text-xs text-[#9eb19a] leading-relaxed">
+                  {detail.copy}
+                </p>
+              </div>
+
+              <div className="relative z-10 mt-7 flex items-center gap-1.5 text-xs font-bold text-[#81927d] group-hover:text-[#a3ff12] transition-colors">
+                <span>Browse {category}</span>
+                <ArrowUpRight size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform stroke-[2.5]" />
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </section>
+  );
 }
