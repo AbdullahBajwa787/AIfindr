@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { SiteShell } from "@/components/site-shell";
+import { AnalyticsTracker } from "@/components/analytics-tracker";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -45,6 +46,7 @@ export default function RootLayout({
         <link rel="icon" href="/logo.png" />
       </head>
       <body className="bg-[#060805] text-[#f0f5ee] selection:bg-[#a3ff12] selection:text-[#060805]">
+        <AnalyticsTracker />
         <SiteShell>{children}</SiteShell>
       </body>
     </html>

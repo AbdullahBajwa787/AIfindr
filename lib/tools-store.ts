@@ -45,29 +45,67 @@ export interface SubmittedTool {
 const STORAGE_KEY_TOOLS = "aifindr_managed_tools";
 const STORAGE_KEY_TICKETS = "aifindr_support_tickets";
 const STORAGE_KEY_SUBMISSIONS = "aifindr_user_submissions";
-const STORAGE_KEY_ANALYTICS = "aifindr_analytics_metrics";
+const STORAGE_KEY_ANALYTICS = "aifindr_real_analytics";
+const SESSION_KEY_VISITED = "aifindr_session_counted";
 
-const defaultAnalytics: AnalyticsData = {
-  totalVisitors: 18420,
-  todayVisitors: 1240,
-  totalPageViews: 43910,
-  activeBookmarks: 894,
-  liveVisitors: 18,
-  topCountries: [
-    { country: "United States", code: "US", percent: 42 },
-    { country: "United Kingdom", code: "UK", percent: 18 },
-    { country: "Pakistan", code: "PK", percent: 15 },
-    { country: "Germany", code: "DE", percent: 12 },
-    { country: "India", code: "IN", percent: 13 },
-  ],
-  visitorLogs: [
-    { id: "1", action: "Viewed Tool", toolName: "Cursor", location: "San Francisco, US", time: "Just now", device: "Desktop / Chrome" },
-    { id: "2", action: "Bookmarked", toolName: "Midjourney", location: "London, UK", time: "2 min ago", device: "Mobile / Safari" },
-    { id: "3", action: "Searched 'Coding'", toolName: "GitHub Copilot", location: "Lahore, PK", time: "5 min ago", device: "Desktop / Windows" },
-    { id: "4", action: "External Link Click", toolName: "ElevenLabs", location: "Berlin, DE", time: "8 min ago", device: "Desktop / Mac" },
-    { id: "5", action: "Viewed Tool", toolName: "ChatGPT", location: "Mumbai, IN", time: "11 min ago", device: "Mobile / Android" },
-  ],
-};
+// Clean, realistic initial baseline for newly launched site
+function getInitialRealAnalytics(): AnalyticsData {
+  let initialBookmarks = 0;
+  if (typeof window !== "undefined") {
+    try {
+      const saved = JSON.parse(localStorage.getItem("aifindr_saved_tools") || "[]");
+      if (Array.isArray(saved)) initialBookmarks = saved.length;
+    } catch {}
+  }
+
+  // Detect real visitor country/timezone
+  let detectedCountry = "Pakistan (PK)";
+  let countryName = "Pakistan";
+  let countryCode = "PK";
+  if (typeof window !== "undefined") {
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+      if (tz.includes("Karachi") || tz.includes("Pakistan")) {
+        detectedCountry = "Pakistan (PK)";
+        countryName = "Pakistan";
+        countryCode = "PK";
+      } else if (tz.includes("New_York") || tz.includes("Los_Angeles") || tz.includes("America")) {
+        detectedCountry = "United States (US)";
+        countryName = "United States";
+        countryCode = "US";
+      } else if (tz.includes("London") || tz.includes("Europe")) {
+        detectedCountry = "United Kingdom (UK)";
+        countryName = "United Kingdom";
+        countryCode = "UK";
+      } else {
+        const parts = tz.split("/");
+        countryName = parts[0] || "Global";
+        detectedCountry = `${countryName}`;
+      }
+    } catch {}
+  }
+
+  return {
+    totalVisitors: 1,
+    todayVisitors: 1,
+    totalPageViews: 1,
+    activeBookmarks: initialBookmarks,
+    liveVisitors: 1,
+    topCountries: [
+      { country: countryName, code: countryCode, percent: 100 },
+    ],
+    visitorLogs: [
+      {
+        id: "log-1",
+        action: "Launched Website",
+        toolName: "Homepage",
+        location: detectedCountry,
+        time: "Just now",
+        device: typeof window !== "undefined" && window.innerWidth < 768 ? "Mobile Device" : "Desktop Browser",
+      },
+    ],
+  };
+}
 
 export function getStoredTools(): Tool[] {
   if (typeof window === "undefined") return initialTools;
@@ -94,14 +132,23 @@ export function saveStoredTools(tools: Tool[]) {
 }
 
 export function getStoredAnalytics(): AnalyticsData {
-  if (typeof window === "undefined") return defaultAnalytics;
+  if (typeof window === "undefined") return getInitialRealAnalytics();
   try {
     const saved = localStorage.getItem(STORAGE_KEY_ANALYTICS);
-    if (saved) return JSON.parse(saved);
-  } catch (e) {
-    // fallback
-  }
-  return defaultAnalytics;
+    if (saved) {
+      const parsed: AnalyticsData = JSON.parse(saved);
+      // Synchronize real bookmarks count with actual saved bookmarks
+      try {
+        const bookmarks = JSON.parse(localStorage.getItem("aifindr_saved_tools") || "[]");
+        if (Array.isArray(bookmarks)) parsed.activeBookmarks = bookmarks.length;
+      } catch {}
+      return parsed;
+    }
+  } catch (e) {}
+
+  const initial = getInitialRealAnalytics();
+  saveStoredAnalytics(initial);
+  return initial;
 }
 
 export function saveStoredAnalytics(data: AnalyticsData) {
@@ -109,9 +156,77 @@ export function saveStoredAnalytics(data: AnalyticsData) {
   try {
     localStorage.setItem(STORAGE_KEY_ANALYTICS, JSON.stringify(data));
     window.dispatchEvent(new Event("aifindr_analytics_updated"));
-  } catch (e) {
-    // fallback
-  }
+  } catch (e) {}
+}
+
+export function resetAnalyticsToZero() {
+  if (typeof window === "undefined") return;
+  const zeroData: AnalyticsData = {
+    totalVisitors: 1,
+    todayVisitors: 1,
+    totalPageViews: 1,
+    activeBookmarks: 0,
+    liveVisitors: 1,
+    topCountries: [{ country: "Live Visitors", code: "NOW", percent: 100 }],
+    visitorLogs: [
+      {
+        id: `reset-${Date.now()}`,
+        action: "Metrics Reset to Live",
+        toolName: "Admin Dashboard",
+        location: "Admin Session",
+        time: "Just now",
+        device: "Current Device",
+      },
+    ],
+  };
+  saveStoredAnalytics(zeroData);
+}
+
+// Track a real live event on the site
+export function trackLiveEvent(action: string, toolName: string = "Directory") {
+  if (typeof window === "undefined") return;
+  try {
+    const current = getStoredAnalytics();
+    const isNewSession = !sessionStorage.getItem(SESSION_KEY_VISITED);
+    if (isNewSession) {
+      sessionStorage.setItem(SESSION_KEY_VISITED, "true");
+      current.totalVisitors = (current.totalVisitors || 0) + 1;
+      current.todayVisitors = (current.todayVisitors || 0) + 1;
+    }
+
+    current.totalPageViews = (current.totalPageViews || 0) + 1;
+
+    // Detect actual bookmarks count
+    try {
+      const bookmarks = JSON.parse(localStorage.getItem("aifindr_saved_tools") || "[]");
+      if (Array.isArray(bookmarks)) current.activeBookmarks = bookmarks.length;
+    } catch {}
+
+    // Detect user timezone/location
+    let location = "Live Visitor";
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+      if (tz.includes("Karachi") || tz.includes("Pakistan")) location = "Pakistan (PK)";
+      else if (tz.includes("New_York") || tz.includes("America")) location = "United States (US)";
+      else if (tz.includes("London") || tz.includes("Europe")) location = "United Kingdom (UK)";
+      else if (tz) location = tz.split("/")[1]?.replace("_", " ") || tz;
+    } catch {}
+
+    const device = window.innerWidth < 768 ? "Mobile Device" : "Desktop Browser";
+
+    const newLog = {
+      id: `log-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      action,
+      toolName,
+      location,
+      time: "Just now",
+      device,
+    };
+
+    // Keep the latest 20 real activity logs
+    current.visitorLogs = [newLog, ...(current.visitorLogs || []).slice(0, 19)];
+    saveStoredAnalytics(current);
+  } catch (e) {}
 }
 
 export function getStoredTickets(): SupportTicket[] {
@@ -120,28 +235,7 @@ export function getStoredTickets(): SupportTicket[] {
     const saved = localStorage.getItem(STORAGE_KEY_TICKETS);
     if (saved) return JSON.parse(saved);
   } catch (e) {}
-  return [
-    {
-      id: "TICK-101",
-      name: "Ali Khan",
-      email: "ali@example.com",
-      type: "Tool Update Request",
-      subject: "Update pricing for Cursor",
-      message: "Cursor now has a new pro hobbyist tier, please reflect in listing.",
-      date: "Nov 15, 2026",
-      status: "Open",
-    },
-    {
-      id: "TICK-102",
-      name: "Sarah Miller",
-      email: "sarah@creator.ai",
-      type: "Partnership",
-      subject: "Featured listing partnership inquiry",
-      message: "We would like to discuss featuring our new voice cloning tool on AIFindr.",
-      date: "Nov 14, 2026",
-      status: "Resolved",
-    },
-  ];
+  return [];
 }
 
 export function saveTicket(ticket: Omit<SupportTicket, "id" | "date" | "status">) {
@@ -154,6 +248,7 @@ export function saveTicket(ticket: Omit<SupportTicket, "id" | "date" | "status">
     status: "Open",
   };
   localStorage.setItem(STORAGE_KEY_TICKETS, JSON.stringify([newTicket, ...current]));
+  trackLiveEvent("Submitted Support Ticket", ticket.subject || "Support");
 }
 
 export function useTools() {
